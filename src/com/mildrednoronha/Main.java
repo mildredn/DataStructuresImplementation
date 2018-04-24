@@ -4,8 +4,8 @@ package com.mildrednoronha;
 class Node{
 
     //Check access specifiers for these variables
-    int value;
-    Node link;
+    protected int value;
+    protected Node link;
 
     //Constructor
     public Node(){
@@ -18,6 +18,7 @@ class Node{
         this.value = value;
         this.link = null;
     }
+
 
     public void setValue(int value){
         this.value = value;
@@ -38,9 +39,9 @@ class Node{
 
 
 class linkedList{
-    Node start;
-    Node end;
-    int size;
+    protected Node start;
+    protected Node end;
+    protected int size;
 
     public linkedList(){
         start = null;
@@ -65,6 +66,7 @@ class linkedList{
 
     public void insertNodeAtEnd(int value){
         Node newNode = new Node(value);
+        size++;
 
         if(start == null){
             start = newNode;
@@ -74,7 +76,7 @@ class linkedList{
             end.setNextLink(newNode);
             end = newNode;
         }
-        size++;
+
     }
 
     public void insertAtPosition(int value, int position){
@@ -94,7 +96,8 @@ class linkedList{
 
     public void deleteFromPosition(int position){
         if(position == 1){
-            start.setNextLink(start.getNextLink());
+            Node temp = start.getNextLink();
+            start = temp;
             size--;
             return;
         }
@@ -105,8 +108,9 @@ class linkedList{
                 temp = temp.getNextLink();
 
             }
-            temp.setNextLink(null);
+
             end = temp;
+            end.setNextLink(null);
             size--;
             return;
         }
@@ -136,10 +140,11 @@ class linkedList{
             return;
         }
 
-        while(temp.getNextLink() != null){
+        while(temp != null){
             System.out.print(Integer.toString(temp.getValue())+ " ");
             temp = temp.getNextLink();
         }
+        System.out.println();
     }
 
 }
@@ -147,11 +152,12 @@ class linkedList{
 //Stack using array
 class Stack{
 
-    static final int MAX_SIZE = 1000;
-    int stackContent[] = new int[MAX_SIZE];
-    int top;
+    protected static final int MAX_SIZE = 1000;
+    protected int stackContent[];
+    protected int top;
 
     Stack(){
+        stackContent = new int[MAX_SIZE];
         top = -1;
     }
 
@@ -210,20 +216,27 @@ class Stack{
 //Queue using array
 class Queue{
 
-    static final int MAX_SIZE = 1000;
-    int queueContents[];
-    int front, rear, length;
+    protected static final int MAX_SIZE = 1000;
+    protected int queueContents[];
+    protected int front, rear, length;
+
+    Queue(){
+        queueContents = new int[MAX_SIZE];
+        front = -1;
+        rear = -1;
+        length = 0;
+    }
 
 
     public boolean isEmpty(){
 
-        return (front == -1);
+        return (front == -1 && rear == -1);
 
     }
 
     public boolean isFull(){
 
-        return ((front == 0) && (rear == length - 1));
+        return ((front == 0) && (rear == MAX_SIZE - 1));
 
     }
 
@@ -238,7 +251,62 @@ class Queue{
         if(isEmpty()){
             return -1;
         }
-        
+
+        return queueContents[front];
+    }
+
+    public void insert(int i){
+
+        if(rear == -1){
+            front = rear = 0;
+            queueContents[rear] = i;
+        }
+        else
+            if(isFull()){
+                System.out.println("Queue overflow.");
+                return;
+            }
+            else
+                if(rear < MAX_SIZE){
+                    queueContents[++rear] = i;
+                }
+        length++;
+    }
+
+    public int remove(){
+        if(isEmpty()){
+            System.out.println("Queue underflow.");
+            return -1;
+        }
+        else{
+            length--;
+            int element = queueContents[front];
+            if(front == rear){
+                front = -1;
+                rear = -1;
+            }
+            else{
+                front++;
+            }
+            return element;
+        }
+    }
+
+    public void display(){
+
+        if(isEmpty()){
+            System.out.println("Queue underflow.");
+            return;
+        }
+        if(isFull()){
+            System.out.println("Queue overflow.");
+            return;
+        }
+
+        for(int i = front; i <= rear; i++){
+            System.out.print(queueContents[i]+" ");
+        }
+        System.out.println();
     }
 
 }
@@ -247,7 +315,14 @@ public class Main {
 
     public static void main(String[] args) {
         linkedList testLinkedList = new linkedList();
-
+        testLinkedList.insertNodeAtStart(20);
+        testLinkedList.insertNodeAtEnd(45);
+        testLinkedList.insertAtPosition(33, 2);
+        testLinkedList.insertNodeAtEnd(65);
+        testLinkedList.printList();
+        testLinkedList.deleteFromPosition(1);
+        testLinkedList.deleteFromPosition(3);
+        testLinkedList.printList();
     }
 
 }
